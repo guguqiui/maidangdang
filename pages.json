@@ -1,0 +1,70 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+			}
+		},
+		{
+			"path" : "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录/注册"
+			}
+		},
+		{
+			"path" : "pages/mine/mine",
+			"style" : 
+			{
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path" : "pages/settings/settings",
+			"style" : 
+			{
+				"navigationBarTitleText": "设置"
+			}
+		},
+		{
+			"path" : "pages/cart/cart",
+			"style" : 
+			{
+				"navigationBarTitleText": "购物车"
+			}
+		},
+		{
+			"path" : "pages/order/order-list/order-list",
+			"style" : 
+			{
+				"navigationBarTitleText": "我的订单"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#737373",
+		"selectedColor": "#707070",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/images/home.png",
+				"selectedIconPath": "static/images/home_selected.png"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的",
+				"iconPath": "static/images/mine.png",
+				"selectedIconPath": "static/images/mine_selected.png"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "麦当当",
+		"navigationBarBackgroundColor": "#ED9220",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+	
+}
