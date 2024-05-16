@@ -34,19 +34,10 @@ import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
 	const selectedCategory = ref('');
 
 	// 获取菜品分类列表
-	// const getCategories = () => {
-	// 	axios.get('http://82.156.104.168:80/api/category/list').then((res) => {
-	// 		categories.value = res.data.data.categories; 
-	// 		console.log(res)
-	//   })
-	// }
-
 	const getCategories = async () => {
 		try {
 			const response = await queryCategory();
-			categories.value = response.data.data.catagories;
-			console.log("res: " + response.data.data)
-			console.log("data: " + response.data.data.catagories)
+			categories.value = response.data.data.categories;
 			getGoodsByCategory();
 		} catch (error) {
 			console.error('获取菜品分类失败：', error);
