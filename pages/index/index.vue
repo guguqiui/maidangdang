@@ -1,98 +1,201 @@
 <template>
-  <div class="container">
-    <h2 class="title">菜品分类列表</h2>
-    <ul class="category-list">
-      <li v-for="category in categories" :key="category.id" class="category-item">{{ category.name }}</li>
-    </ul>
-
-    <h2 class="title">选择分类查看菜品</h2>
-    <select v-model="selectedCategory" @change="getGoodsByCategory" class="category-select">
-      <option disabled value="">请选择分类</option>
-      <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
-    </select>
-
-    <h2 class="title">菜品列表</h2>
-    <ul v-if="goods.length > 0" class="goods-list">
-      <li v-for="good in goods" :key="good.id" class="good-item">{{ good.name }}</li>
-    </ul>
-    <p v-else class="no-goods">当前分类下没有可用的菜品。</p>
-  </div>
+	<view class="page-wrapper">
+		<view class="search_wrapper" @tap="gotoSearch">
+			<view class="search_row">
+				<image class="search-img" src="/static/images/search.png"></image>
+				<view class="search-text">点击搜索</view>
+			</view>
+		</view>
+		
+		<scroll-view class="tab-row" :scroll-x="true">
+			<view :class="'tab  ' + (index == selectedCategory ? 'tab-selected' : '')" @tap="tabSelect" :data-id="index"
+				v-for="(item, index) in categories" :key="item.k">
+				{{ item.Category }}
+			</view>
+		</scroll-view>
+		
+		<view class="goods-row" @tap="gotoGoodsDetail" :data-id="item.DishId" v-for="(item, index) in goods" :key="item.k">
+			<image class="goods-img" :src="item.Picture"></image>
+				<view class="goods-desc">
+					<view class="goods-name">{{ item.Name }}</view>
+					<view class="goods-price">￥{{ item.Price }}</view>
+				</view>
+		</view>	
+	</view>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { queryCategory, queryGoodsByCategory } from '@/common/api';
+import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
+// import axios from 'axios'
 
-const categories = ref([]);
-const goods = ref([]);
-const selectedCategory = ref('');
+	const categories = ref([]);
+	const goods = ref([]);
+	const selectedCategory = ref('');
 
-const fetchCategories = async () => {
-  try {
-    const response = await queryCategory();
-    categories.value = response.data; // Assuming the response contains an array of categories
-  } catch (error) {
-    console.error('获取菜品分类失败：', error);
-  }
-};
+	// 获取菜品分类列表
+	// const getCategories = () => {
+	// 	axios.get('http://82.156.104.168:80/api/category/list').then((res) => {
+	// 		categories.value = res.data.data.categories; 
+	// 		console.log(res)
+	//   })
+	// }
 
-const getGoodsByCategory = async () => {
-  try {
-    const response = await queryGoodsByCategory(selectedCategory.value);
-    goods.value = response.data; // Assuming the response contains an array of goods for the selected category
-  } catch (error) {
-    console.error('获取当前分类下的菜品失败：', error);
-  }
-};
+	const getCategories = async () => {
+		try {
+			const response = await queryCategory();
+			categories.value = response.data.data.catagories;
+			console.log("res: " + response.data.data)
+			console.log("data: " + response.data.data.catagories)
+			getGoodsByCategory();
+		} catch (error) {
+			console.error('获取菜品分类失败：', error);
+		}
+	};
+	
+	// 根据分类查看菜品
+	const getGoodsByCategory = async () => {
+	  try {
+		const response = await queryGoodsByCategory(selectedCategory.value);
+		goods.value = response.data.data.dish; 
+	  } catch (error) {
+		console.error('获取当前分类下的菜品失败：', error);
+	  }
+	};
 
-onMounted(() => {
-  fetchCategories();
-});
+	
+	const getCurrentCategoryId = () => {
+		return categories.value[selectedCategory.value].CategoryID
+	}
+	
+	const tabSelect = (e) => {
+		selectedCategory.value = e.currentTarget.dataset.id
+		queryGoods()
+	}
+	
+	const gotoSearch = () => {
+	  uni.navigateTo({
+		url: '/pages/search/search'
+	  });
+	};
+	
+	const gotoGoodsDetail = (e) => {
+		let goodsId = e.currentTarget.dataset['id']
+		uni.navigateTo({
+			url: '/pages/goods/goods?id=' + goodsId
+		})
+	}
+	
+	onMounted(() => {
+	  getCategories();
+	});
 </script>
 
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
+	.page-wrapper {
+		margin: 0;
+		font-size: 28rpx;
+		line-height: 1.5;
+		color: #333;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+		-webkit-tap-highlight-color: transparent;
+	}
+	
+	.search_wrapper {
+		background-color: #ED9220;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
+	}
+	
+	.search_row {
+		display: flex;
+		flex-direction: row;
+		background-color: white;
+		border-radius: 10rem;
+		margin-left: 1rem;
+		margin-right: 1rem;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		align-items: center;
+	}
+	
+	.search-img {
+		height: 40rpx;
+		width: 40rpx;
+		margin-left: 20rpx;
+	}
+	
+	.search-text {
+		margin-left: 20rpx;
+	}
+	
+	.tab-row {
+		padding-top: 30rpx;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		box-sizing: border-box;
+		white-space: nowrap;
+		background-color: white;
+	}
+	
+	.tab {
+		width: 120rpx;
+		margin-left: 10rpx;
+		margin-right: 10rpx;
+		display: inline-block;
+		padding-bottom: 10rpx;
+		text-align: center;
+	}
+	
+	.tab-selected {
+		border-bottom: 4rpx solid;
+		color: #ED9220;
+	}
+	
+	.split-view {
+		height: 30rpx;
+	}
 
-.title {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
+	.goods-row {
+		display: flex;
+		flex-direction: row;
+		background-color: #fff;
+		border-radius: 10rpx;
+		margin-top: 20rpx;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		padding: 20rpx;
+	}
 
-.category-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+	.goods-img {
+		margin-left: 40rpx;
+		width: 200rpx;
+		height: 200rpx;
+	}
 
-.category-item {
-  margin-bottom: 5px;
-  font-size: 18px;
-}
+	.goods-desc {
+		display: flex;
+		flex-direction: column;
+		margin-left: 40rpx;
+	}
 
-.category-select {
-  font-size: 16px;
-  padding: 5px;
-  margin-bottom: 10px;
-}
+	.goods-name {
+		font-size: 35rpx;
+		width: 400rpx;
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-wrap: break-word;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 
-.goods-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.good-item {
-  margin-bottom: 5px;
-  font-size: 16px;
-}
-
-.no-goods {
-  font-style: italic;
-  color: #888;
-}
+	.goods-price {
+		margin-top: 20rpx;
+		color: #ED9220;
+	}
+	
 </style>
 

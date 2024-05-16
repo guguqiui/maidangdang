@@ -1,0 +1,37 @@
+
+.container.data-v-1cf27b2a {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.title.data-v-1cf27b2a {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.category-list.data-v-1cf27b2a {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.category-item.data-v-1cf27b2a {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+.category-select.data-v-1cf27b2a {
+  font-size: 16px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.goods-list.data-v-1cf27b2a {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.good-item.data-v-1cf27b2a {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+.no-goods.data-v-1cf27b2a {
+  font-style: italic;
+  color: #888;
+}
