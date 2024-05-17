@@ -27,11 +27,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
-// import axios from 'axios'
 
 	const categories = ref([]);
 	const goods = ref([]);
-	const selectedCategory = ref('');
+	const selectedCategory = ref(0);
 
 	// 获取菜品分类列表
 	const getCategories = async () => {
@@ -47,8 +46,8 @@ import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
 	// 根据分类查看菜品
 	const getGoodsByCategory = async () => {
 	  try {
-		const response = await queryGoodsByCategory(selectedCategory.value);
-		goods.value = response.data.data.dish; 
+		const response = await queryGoodsByCategory(selectedCategory.value + 1);
+		goods.value = response.data.data.dishes; 
 	  } catch (error) {
 		console.error('获取当前分类下的菜品失败：', error);
 	  }
@@ -61,7 +60,7 @@ import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
 	
 	const tabSelect = (e) => {
 		selectedCategory.value = e.currentTarget.dataset.id
-		queryGoods()
+		getGoodsByCategory()
 	}
 	
 	const gotoSearch = () => {

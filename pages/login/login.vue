@@ -26,7 +26,7 @@
 	import { ref } from 'vue';
 	import { login, register } from '@/common/api';
 
-	const phone = ref('');
+	const username = ref('');
 	const password = ref('');
 
 	const inputChange = (e) => {
@@ -52,22 +52,22 @@
 		  })
 		}
 	  });
-};
+	};
 
-const onRegister = () => {
-  const params = {
-    name: phone.value,
-    password: password.value
-  };
-  register(params).then(resp => {
-    if (!resp.data.code) {
-      uni.setStorageSync('token',resp.data.data.token)
-      uni.switchTab({
-      	url: '/pages/index/index'
-      })
-    }
-  });
-};
+	const onRegister = () => {
+	  const params = {
+		name: phone.value,
+		password: password.value
+	  };
+	  register(params).then(resp => {
+		if (!resp.data.code) {
+		  uni.setStorageSync('token',resp.data.data.token)
+		  uni.switchTab({
+			url: '/pages/index/index'
+		  })
+		}
+	  });
+	};
 </script>
 
 <style scoped lang='scss'>
@@ -98,7 +98,7 @@ const onRegister = () => {
 	}
 
 	.confirm-btn {
-	  width: 200px;
+	  width: 150px;
 	  border-radius: 2rem;
 	  margin: 50px auto 0;
 	  background-color: #ED9220;
