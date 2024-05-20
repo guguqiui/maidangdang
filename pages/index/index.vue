@@ -49,20 +49,21 @@ import { getDishImage, queryGoods, queryCategory, queryGoodsByCategory } from '@
 	  try {
 		const response = await queryGoodsByCategory(selectedCategory.value + 1);
 		const dishes = response.data.data.dishes;
-
-		// 并行获取所有菜品的图片数据
-		const imagePromises = dishes.map(dish =>
-			getDishImage(dish.DishId).then(imageResponse => {
-				console.log(imageResponse.data)
+		
+		// 逐个获取所有菜品的图片数据
+		for (const dish of dishes) {
+			try {
+				const imageResponse = await getDishImage(dish.DishId);
 				dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
-				return dish;
-			})
-		);
+			} catch (imageError) {
+				console.error(`获取图片失败: ${imageError}`);
+				// 如果获取图片失败，可以选择设置一个默认图片或处理错误
+				dish.Picture = '';
+			}
+		}
 		
-	    // 等待所有图片数据获取完成
-	    goods.value = await Promise.all(imagePromises);
-		
-		goods.value = response.data.data.dishes; 
+		// 将更新后的菜品列表赋值给 goods
+		goods.value = dishes; 
 	  } catch (error) {
 		console.error('获取当前分类下的菜品失败：', error);
 	  }
