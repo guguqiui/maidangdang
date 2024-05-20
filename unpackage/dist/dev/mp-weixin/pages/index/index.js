@@ -1,47 +1,81 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const common_api_index = require("../../common/api/index.js");
+require("../../common/utils/request.js");
+require("../../common/utils/config.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
     const categories = common_vendor.ref([]);
     const goods = common_vendor.ref([]);
-    const selectedCategory = common_vendor.ref("");
-    const fetchCategories = () => {
-      console.log("自我测试");
-      common_vendor.axios.get("http://82.156.104.168:80/api/dish/list").then((res) => {
-        categories.value = res.data;
-        console.log(res);
+    const selectedCategory = common_vendor.ref(0);
+    const getCategories = async () => {
+      try {
+        const response = await common_api_index.queryCategory();
+        categories.value = response.data.data.categories;
+        getGoodsByCategory();
+      } catch (error) {
+        console.error("获取菜品分类失败：", error);
+      }
+    };
+    const getGoodsByCategory = async () => {
+      try {
+        const response = await common_api_index.queryGoodsByCategory(selectedCategory.value + 1);
+        const dishes = response.data.data.dishes;
+        const imagePromises = dishes.map(
+          (dish) => common_api_index.getDishImage(dish.DishId).then((imageResponse) => {
+            console.log(imageResponse.data);
+            dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+            return dish;
+          })
+        );
+        goods.value = await Promise.all(imagePromises);
+        goods.value = response.data.data.dishes;
+      } catch (error) {
+        console.error("获取当前分类下的菜品失败：", error);
+      }
+    };
+    const tabSelect = (e) => {
+      selectedCategory.value = e.currentTarget.dataset.id;
+      getGoodsByCategory();
+    };
+    const gotoSearch = () => {
+      common_vendor.index.navigateTo({
+        url: "/pages/search/search"
+      });
+    };
+    const gotoGoodsDetail = (e) => {
+      let goodsId = e.currentTarget.dataset["id"];
+      common_vendor.index.navigateTo({
+        url: "/pages/goods/goods?id=" + goodsId
       });
     };
     common_vendor.onMounted(() => {
-      fetchCategories();
+      getCategories();
     });
     return (_ctx, _cache) => {
-      return common_vendor.e({
-        a: common_vendor.f(categories.value, (category, k0, i0) => {
+      return {
+        a: common_vendor.o(gotoSearch),
+        b: common_vendor.f(categories.value, (item, index, i0) => {
           return {
-            a: common_vendor.t(category.name),
-            b: category.id
+            a: common_vendor.t(item.Category),
+            b: common_vendor.n("tab  " + (index == selectedCategory.value ? "tab-selected" : "")),
+            c: common_vendor.o(tabSelect, item.k),
+            d: index,
+            e: item.k
           };
         }),
-        b: common_vendor.f(categories.value, (category, k0, i0) => {
+        c: common_vendor.f(goods.value, (item, index, i0) => {
           return {
-            a: common_vendor.t(category.name),
-            b: category.id,
-            c: category.id
-          };
-        }),
-        c: selectedCategory.value,
-        d: common_vendor.o(($event) => selectedCategory.value = $event.target.value),
-        e: goods.value.length > 0
-      }, goods.value.length > 0 ? {
-        f: common_vendor.f(goods.value, (good, k0, i0) => {
-          return {
-            a: common_vendor.t(good.name),
-            b: good.id
+            a: item.Picture,
+            b: common_vendor.t(item.Name),
+            c: common_vendor.t(item.Price),
+            d: common_vendor.o(gotoGoodsDetail, item.k),
+            e: item.DishId,
+            f: item.k
           };
         })
-      } : {});
+      };
     };
   }
 };

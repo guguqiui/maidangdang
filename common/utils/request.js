@@ -1,6 +1,9 @@
 import { baseURL } from './config'
 function getType(data, method) {
 	let type = {}
+	const token = uni.getStorageSync('token')
+	const authHeader = 'Bearer ' + token
+	
 	if (method == 'post' || method == 'put') {
 		type = {
 			method,
@@ -9,7 +12,7 @@ function getType(data, method) {
 			},
 			header: {
 				'content-type': 'application/json',
-				'Authorization': uni.getStorageSync('token')
+				'Authorization': authHeader
 			}
 		}
 	} else {
@@ -19,7 +22,7 @@ function getType(data, method) {
 				...data
 			},
 			header: {
-				'Authorization': uni.getStorageSync('token')
+				'Authorization': authHeader
 			}
 		}
 	}

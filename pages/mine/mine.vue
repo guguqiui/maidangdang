@@ -23,11 +23,13 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { onShow } from "@dcloudio/uni-app";
 
 const userDesc = ref('');
 
+	
 const checkUserStatus = () => {
-    const token = uni.getStorageSync('token');
+    var token = uni.getStorageSync('token');
     if (token) {
         userDesc.value = '尊贵会员';
     } else {

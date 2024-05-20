@@ -6,19 +6,19 @@ require("../../common/utils/config.js");
 const _sfc_main = {
   __name: "login",
   setup(__props) {
-    const phone = common_vendor.ref("");
+    const username = common_vendor.ref("");
     const password = common_vendor.ref("");
     const inputChange = (e) => {
       const key = e.currentTarget.dataset.key;
-      if (key === "phone") {
-        phone.value = e.target.value;
+      if (key === "username") {
+        username.value = e.detail.value;
       } else if (key === "password") {
-        password.value = e.target.value;
+        password.value = e.detail.value;
       }
     };
     const onLogin = () => {
       const params = {
-        name: phone.value,
+        username: username.value,
         password: password.value
       };
       common_api_index.login(params).then((resp) => {
@@ -32,10 +32,11 @@ const _sfc_main = {
     };
     const onRegister = () => {
       const params = {
-        name: phone.value,
+        username: username.value,
         password: password.value
       };
       common_api_index.register(params).then((resp) => {
+        console.log(resp.data.code);
         if (!resp.data.code) {
           common_vendor.index.setStorageSync("token", resp.data.data.token);
           common_vendor.index.switchTab({
@@ -46,8 +47,8 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return {
-        a: common_vendor.o([($event) => phone.value = $event.detail.value, inputChange]),
-        b: phone.value,
+        a: common_vendor.o([($event) => username.value = $event.detail.value, inputChange]),
+        b: username.value,
         c: common_vendor.o([($event) => password.value = $event.detail.value, inputChange]),
         d: password.value,
         e: common_vendor.o(onLogin),

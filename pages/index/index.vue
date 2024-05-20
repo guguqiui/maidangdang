@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
+import { getDishImage, queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
 
 	const categories = ref([]);
 	const goods = ref([]);
@@ -43,10 +43,25 @@ import { queryGoods, queryCategory, queryGoodsByCategory } from '@/common/api';
 		}
 	};
 	
+	
 	// 根据分类查看菜品
 	const getGoodsByCategory = async () => {
 	  try {
 		const response = await queryGoodsByCategory(selectedCategory.value + 1);
+		const dishes = response.data.data.dishes;
+
+		// 并行获取所有菜品的图片数据
+		const imagePromises = dishes.map(dish =>
+			getDishImage(dish.DishId).then(imageResponse => {
+				console.log(imageResponse.data)
+				dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+				return dish;
+			})
+		);
+		
+	    // 等待所有图片数据获取完成
+	    goods.value = await Promise.all(imagePromises);
+		
 		goods.value = response.data.data.dishes; 
 	  } catch (error) {
 		console.error('获取当前分类下的菜品失败：', error);

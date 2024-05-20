@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="input-content">
         <div class="input-item">
-          <input v-model="phone" placeholder="请输入账号" data-key="phone" @input="inputChange">
+          <input v-model="username" placeholder="请输入账号" data-key="username" @input="inputChange">
         </div>
         <div class="input-item">
           <input type="password" v-model="password" placeholder="请输入密码" placeholder-class="input-empty" maxlength="20"
@@ -31,42 +31,43 @@
 
 	const inputChange = (e) => {
 	  const key = e.currentTarget.dataset.key;
-	  if (key === 'phone') {
-		phone.value = e.target.value;
+	  if (key === 'username') {
+		username.value = e.detail.value;
 	  } else if (key === 'password') {
-		password.value = e.target.value;
+		password.value = e.detail.value;
 	  }
-	  // console.log(phone.value, password.value);
+	  // console.log(username.value, password.value);
 	};
 
 	const onLogin = () => {
-	  const params = {
-		name: phone.value,
-		password: password.value
-	  };
-	  login(params).then(resp => {
-		if (!resp.data.code) {
-		  uni.setStorageSync('token',resp.data.data.token)
-		  uni.switchTab({
-			url: '/pages/index/index'
-		  })
-		}
-	  });
+		const params = {
+			username: username.value,
+			password: password.value
+		};
+		login(params).then(resp => {
+			if (!resp.data.code) {
+				uni.setStorageSync('token',resp.data.data.token)
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
+			}
+		});
 	};
 
 	const onRegister = () => {
-	  const params = {
-		name: phone.value,
-		password: password.value
-	  };
-	  register(params).then(resp => {
-		if (!resp.data.code) {
-		  uni.setStorageSync('token',resp.data.data.token)
-		  uni.switchTab({
-			url: '/pages/index/index'
-		  })
-		}
-	  });
+		const params = {
+			username: username.value,
+			password: password.value
+		};
+		register(params).then(resp => {
+			console.log(resp.data.code)
+			if (!resp.data.code) {
+			  uni.setStorageSync('token',resp.data.data.token)
+			  uni.switchTab({
+				url: '/pages/index/index'
+			  })
+			}
+		});
 	};
 </script>
 

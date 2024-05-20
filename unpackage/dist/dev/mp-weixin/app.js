@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
-require("./src/mock.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/login/login.js";
@@ -9,6 +8,11 @@ if (!Math) {
   "./pages/settings/settings.js";
   "./pages/cart/cart.js";
   "./pages/order/order-list/order-list.js";
+  "./pages/search/search.js";
+  "./pages/goods/goods.js";
+  "./pages/order/order-confirm/order-confirm.js";
+  "./pages/order/order-detail/order-detail.js";
+  "./pages/order/order-confirm-from-cart/order-confirm-from-cart.js";
 }
 const _sfc_main = {
   onLaunch: function() {

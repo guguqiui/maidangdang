@@ -3,16 +3,18 @@
 		<view class="img-container">
 			<image class="goods-img" :src="picUrl"></image>
 		</view>
+		
 		<view class="goods-info">
 			<view class="goods-price">{{ price }}</view>
 			<view class="goods-name">{{ name }}</view>
 			<view class="goods-description">{{ description }}</view>
 		</view>
-		<!-- <image class="goods-desc-img" :src="descPicUrl" mode="widthFix"></image> -->
+
 		<view class="bottom-wrapper">
 			<view class="bottom-split"></view>
 			<view class="bottom-btns">
-				<view class="buy-btn" @tap="buyNow" :data-id="id">购买</view>
+				<view class="cart-btn" @tap="addGoodToCart" :data-id="id">加入购物车</view>
+				<view class="buy-btn" @tap="buyNow" :data-id="id">立刻购买</view>
 			</view>
 		</view>
 	</view>
@@ -35,10 +37,7 @@ import { getGoodInfo, addToCart } from '@/common/api';
 
 	const queryData = async () => {
 	  try {
-		console.log(id.value);
-		console.log(typeof(id.value));
 	    const response = await getGoodInfo(id.value);
-		console.log(response.data.code)
 	    if (!response.data.code) {
 	      name.value = response.data.data.dishInfo.Name;
 	      picUrl.value = response.data.data.dishInfo.Picture;
@@ -49,17 +48,23 @@ import { getGoodInfo, addToCart } from '@/common/api';
 	    console.error('获取商品数据失败：', error);
 	  }
 	};
-	
+
 	const addGoodToCart = async () => {
 	  const token = uni.getStorageSync('token');
+	  const params = {
+	    dish_id: parseInt(id.value)
+	  };
 	  if (!token) {
 	    uni.navigateTo({
-	    	url: '/pages/login/login'
+	      url: '/pages/login/login'
 	    });
 	  } else {
 	    try {
-	      const resp = await addToCart({ goodsId: id.value });
-	      if (!resp.data.code) {
+	      const response = await addToCart(params);
+		  const cartId = response.data.data.cart_id;
+		  
+		  uni.setStorageSync('cart_id', cartId);
+	      if (!response.data.code) {
 	        uni.showToast({ title: '已加入购物车' });
 	      }
 	    } catch (error) {
@@ -67,17 +72,19 @@ import { getGoodInfo, addToCart } from '@/common/api';
 	    }
 	  }
 	};
+
 	
-	const buyNow = () => {
+	const buyNow = (e) => {
 	  const token = uni.getStorageSync('token');
+	  let goodsId = e.currentTarget.dataset['id']
 	  if (!token) {
 	    uni.navigateTo({
 	    	url: '/pages/login/login'
 	    });
 	  } else {
 		uni.navigateTo({
-		  	url: `/pages/order/order-confirm/order-confirm?goodsId=${id.value}`
-		});
+		  	url: '/pages/order/order-confirm/order-confirm?id=' + goodsId
+		})
 	  }
 	};
 	
@@ -87,7 +94,7 @@ import { getGoodInfo, addToCart } from '@/common/api';
 
 </script>
 
-<style>
+
 <style>
 	.page-wrapper {
 		margin: 0;
@@ -205,13 +212,12 @@ import { getGoodInfo, addToCart } from '@/common/api';
 	}
 
 	.bottom-btns {
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		margin-bottom: 20rpx;
-		align-items: center;
+	  display: flex;
+	  flex-direction: row;
+	  justify-content: space-between;
+	  margin-top: 20rpx;
 	}
-
+	
 	.add-to-cart {
 		display: flex;
 		flex-direction: row;
@@ -228,18 +234,16 @@ import { getGoodInfo, addToCart } from '@/common/api';
 		width: 50rpx;
 		height: 50rpx;
 	}
-
-	.buy-btn {
-		flex: 1;
-		font-size: 35rpx;
-		color: #fff;
-		background-color: #ED9220;
-		border-radius: 2rem;
-		padding: 20rpx;
-		display: flex;
-		justify-content: center;
-		margin-left: 100px;
-		margin-right: 100rpx;
+	
+	.cart-btn, .buy-btn {
+	  flex: 1;
+	  font-size: 35rpx;
+	  color: #fff;
+	  background-color: #ED9220;
+	  border-radius: 2rem;
+	  padding: 20rpx;
+	  text-align: center;
+	  margin: 0 10rpx;
 	}
 
 	.tags-row {

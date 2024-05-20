@@ -3,6 +3,8 @@ const common_vendor = require("../vendor.js");
 const common_utils_config = require("./config.js");
 function getType(data, method) {
   let type = {};
+  const token = common_vendor.index.getStorageSync("token");
+  const authHeader = "Bearer " + token;
   if (method == "post" || method == "put") {
     type = {
       method,
@@ -11,7 +13,7 @@ function getType(data, method) {
       },
       header: {
         "content-type": "application/json",
-        "Authorization": common_vendor.index.getStorageSync("token")
+        "Authorization": authHeader
       }
     };
   } else {
@@ -21,7 +23,7 @@ function getType(data, method) {
         ...data
       },
       header: {
-        "Authorization": common_vendor.index.getStorageSync("token")
+        "Authorization": authHeader
       }
     };
   }

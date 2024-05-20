@@ -5,7 +5,7 @@ const _sfc_main = {
   setup(__props) {
     const userDesc = common_vendor.ref("");
     const checkUserStatus = () => {
-      const token = common_vendor.index.getStorageSync("token");
+      var token = common_vendor.index.getStorageSync("token");
       if (token) {
         userDesc.value = "尊贵会员";
       } else {

@@ -1,5 +1,8 @@
 
-.page-wrapper.data-v-1cf27b2a {
+page {
+		background-color: #f4f4f4;
+}
+.page-wrapper {
 		margin: 0;
 		font-size: 28rpx;
 		line-height: 1.5;
@@ -8,14 +11,17 @@
 		-webkit-overflow-scrolling: touch;
 		-webkit-tap-highlight-color: transparent;
 }
-.search_wrapper.data-v-1cf27b2a {
-		background-color: #ED9220;
-		padding-top: 20rpx;
-		padding-bottom: 20rpx;
-}
-.search_row.data-v-1cf27b2a {
+.search_wrapper {
 		display: flex;
 		flex-direction: row;
+		background-color: #ED9220;
+		padding-bottom: 20rpx;
+		align-items: center;
+}
+.search_row {
+		display: flex;
+		flex-direction: row;
+		flex: 1;
 		background-color: white;
 		border-radius: 10rem;
 		margin-left: 1rem;
@@ -24,39 +30,19 @@
 		padding-bottom: 10rpx;
 		align-items: center;
 }
-.search-img.data-v-1cf27b2a {
+.search-img {
 		height: 40rpx;
 		width: 40rpx;
 		margin-left: 20rpx;
 }
-.search-text.data-v-1cf27b2a {
+.search-text {
+		color: #fff;
+		margin-right: 1rem;
+}
+.search-input {
 		margin-left: 20rpx;
 }
-.tab-row.data-v-1cf27b2a {
-		padding-top: 30rpx;
-		width: 100%;
-		display: flex;
-		align-items: center;
-		box-sizing: border-box;
-		white-space: nowrap;
-		background-color: white;
-}
-.tab.data-v-1cf27b2a {
-		width: 120rpx;
-		margin-left: 10rpx;
-		margin-right: 10rpx;
-		display: inline-block;
-		padding-bottom: 10rpx;
-		text-align: center;
-}
-.tab-selected.data-v-1cf27b2a {
-		border-bottom: 4rpx solid;
-		color: #ED9220;
-}
-.split-view.data-v-1cf27b2a {
-		height: 30rpx;
-}
-.goods-row.data-v-1cf27b2a {
+.goods-row {
 		display: flex;
 		flex-direction: row;
 		background-color: #fff;
@@ -66,17 +52,17 @@
 		margin-right: 20rpx;
 		padding: 20rpx;
 }
-.goods-img.data-v-1cf27b2a {
+.goods-img {
 		margin-left: 40rpx;
 		width: 200rpx;
 		height: 200rpx;
 }
-.goods-desc.data-v-1cf27b2a {
+.goods-desc {
 		display: flex;
 		flex-direction: column;
 		margin-left: 40rpx;
 }
-.goods-name.data-v-1cf27b2a {
+.goods-name {
 		font-size: 35rpx;
 		width: 400rpx;
 		display: -webkit-box;
@@ -86,8 +72,7 @@
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 }
-.goods-price.data-v-1cf27b2a {
+.goods-price {
 		margin-top: 20rpx;
 		color: #ED9220;
 }
-	

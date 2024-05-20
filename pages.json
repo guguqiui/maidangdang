@@ -51,8 +51,28 @@
 			"path" : "pages/goods/goods",
 			"style" : 
 			{
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh" : false
+				"navigationBarTitleText": "商品详情"
+			}
+		},
+		{
+			"path" : "pages/order/order-confirm/order-confirm",
+			"style" : 
+			{
+				"navigationBarTitleText": "确认订单"
+			}
+		},
+		{
+			"path" : "pages/order/order-detail/order-detail",
+			"style" : 
+			{
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
+			"path" : "pages/order/order-confirm-from-cart/order-confirm-from-cart",
+			"style" : 
+			{
+				"navigationBarTitleText": "确认订单"
 			}
 		}
 	],
@@ -66,6 +86,12 @@
 				"text": "首页",
 				"iconPath": "static/images/home.png",
 				"selectedIconPath": "static/images/home_selected.png"
+			},
+			{
+				"pagePath": "pages/cart/cart",
+				"text": "购物车",
+				"iconPath": "static/images/cart.png",
+				"selectedIconPath": "static/images/cart_selected.png"
 			},
 			{
 				"pagePath": "pages/mine/mine",

@@ -5,7 +5,12 @@
     "pages/mine/mine",
     "pages/settings/settings",
     "pages/cart/cart",
-    "pages/order/order-list/order-list"
+    "pages/order/order-list/order-list",
+    "pages/search/search",
+    "pages/goods/goods",
+    "pages/order/order-confirm/order-confirm",
+    "pages/order/order-detail/order-detail",
+    "pages/order/order-confirm-from-cart/order-confirm-from-cart"
   ],
   "window": {
     "navigationBarTextStyle": "white",
@@ -23,6 +28,12 @@
         "text": "首页",
         "iconPath": "static/images/home.png",
         "selectedIconPath": "static/images/home_selected.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "static/images/cart.png",
+        "selectedIconPath": "static/images/cart_selected.png"
       },
       {
         "pagePath": "pages/mine/mine",
