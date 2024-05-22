@@ -94,16 +94,10 @@ import { queryCart, addToCart, deleteCart } from '@/common/api'
 		console.log(dishId)
 		console.log(cartId)
 		
-		// const params = {
-		// 	cart_id: parseInt(cartId),
-		// 	dish_id: parseInt(dishId)
-		// };
-		
 		const params = {
-			cart_id: 2,
-			dish_id: 1
+			cart_id: parseInt(cartId),
+			dish_id: parseInt(dishId)
 		};
-		
 		
 		const response = await deleteCart(params);
 		console.log(response)
@@ -258,7 +252,7 @@ page {
 }
 
 .bottom-wrapper {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     width: 100%;
     display: flex;

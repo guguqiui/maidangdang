@@ -4,7 +4,7 @@ function getType(data, method) {
 	const token = uni.getStorageSync('token')
 	const authHeader = 'Bearer ' + token
 	
-	if (method == 'post' || method == 'put') {
+	if (method == 'post' || method == 'put' || method == 'delete') {
 		type = {
 			method,
 			data: {

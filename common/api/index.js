@@ -18,7 +18,7 @@ export function getGoodInfo(id) {
 }
 
 export function getDishImage(dishId) {
-  return request('', `/api/dish/image?id=${dishId}`, 'GET').then(resp => resp)
+  return request('', `/api/dish/image?id=${dishId}`, 'get').then(resp => resp)
 }
 
 export function addToCart(params) {
