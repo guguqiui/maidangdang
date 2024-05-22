@@ -23,7 +23,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
-import { getGoodInfo, addToCart } from '@/common/api';
+import { getGoodInfo, addToCart, getDishImage } from '@/common/api';
 	const id = ref('');
 	const name = ref('');
 	const picUrl = ref('');
@@ -38,9 +38,15 @@ import { getGoodInfo, addToCart } from '@/common/api';
 	const queryData = async () => {
 	  try {
 	    const response = await getGoodInfo(id.value);
+		try {
+			const imageResponse = await getDishImage(id.value);
+			picUrl.value = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+		} catch (imageError) {
+			console.error(`获取图片失败: ${imageError}`);
+			picUrl.value = '';
+		}
 	    if (!response.data.code) {
 	      name.value = response.data.data.dishInfo.Name;
-	      picUrl.value = response.data.data.dishInfo.Picture;
 	      description.value = response.data.data.dishInfo.Description;
 	      price.value = '￥' + response.data.data.dishInfo.Price;
 	    }

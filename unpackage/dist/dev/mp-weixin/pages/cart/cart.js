@@ -46,6 +46,8 @@ const _sfc_main = {
       let cartItem = dataList.value[index];
       let dishId = cartItem.DishID;
       let cartId2 = cartItem.CartID;
+      const token = common_vendor.index.getStorageSync("token");
+      console.log(token);
       console.log(dishId);
       console.log(cartId2);
       const params = {

@@ -88,7 +88,9 @@ import { queryCart, addToCart, deleteCart } from '@/common/api'
 		
 		let dishId = cartItem.DishID;
 		let cartId = cartItem.CartID;
+		const token = uni.getStorageSync('token');
 		
+		console.log(token)
 		console.log(dishId)
 		console.log(cartId)
 		

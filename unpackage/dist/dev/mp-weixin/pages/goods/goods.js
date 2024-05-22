@@ -18,9 +18,15 @@ const _sfc_main = {
     const queryData = async () => {
       try {
         const response = await common_api_index.getGoodInfo(id.value);
+        try {
+          const imageResponse = await common_api_index.getDishImage(id.value);
+          picUrl.value = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+        } catch (imageError) {
+          console.error(`获取图片失败: ${imageError}`);
+          picUrl.value = "";
+        }
         if (!response.data.code) {
           name.value = response.data.data.dishInfo.Name;
-          picUrl.value = response.data.data.dishInfo.Picture;
           description.value = response.data.data.dishInfo.Description;
           price.value = "￥" + response.data.data.dishInfo.Price;
         }

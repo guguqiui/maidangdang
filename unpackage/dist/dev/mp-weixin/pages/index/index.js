@@ -22,15 +22,16 @@ const _sfc_main = {
       try {
         const response = await common_api_index.queryGoodsByCategory(selectedCategory.value + 1);
         const dishes = response.data.data.dishes;
-        const imagePromises = dishes.map(
-          (dish) => common_api_index.getDishImage(dish.DishId).then((imageResponse) => {
-            console.log(imageResponse.data);
+        for (const dish of dishes) {
+          try {
+            const imageResponse = await common_api_index.getDishImage(dish.DishId);
             dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
-            return dish;
-          })
-        );
-        goods.value = await Promise.all(imagePromises);
-        goods.value = response.data.data.dishes;
+          } catch (imageError) {
+            console.error(`获取图片失败: ${imageError}`);
+            dish.Picture = "";
+          }
+        }
+        goods.value = dishes;
       } catch (error) {
         console.error("获取当前分类下的菜品失败：", error);
       }
