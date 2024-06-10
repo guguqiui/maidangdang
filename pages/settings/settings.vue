@@ -21,8 +21,8 @@
                 <image class="right_arrow" src="/static/images/right_arrow.png"></image>
             </view>
             <view class="split"></view>
-            <view class="common-info-row">
-                <view class="common-info">APP版本</view>
+            <view class="common-info-row" @tap="gotoSuggestion">
+                <view class="common-info">意见与建议</view>
                 <image class="right_arrow" src="/static/images/right_arrow.png"></image>
             </view>
             <view class="split"></view>
@@ -48,6 +48,12 @@ const doLogout = () => {
     uni.removeStorageSync('token');
     uni.switchTab({
         url: '/pages/index/index'
+    });
+};
+
+const gotoSuggestion = () => {
+    uni.navigateTo({
+        url: '/pages/suggestion/suggestion'
     });
 };
 </script>

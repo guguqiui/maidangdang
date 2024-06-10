@@ -12,8 +12,17 @@
         <view class="order-container">
             <view class="order-row" @tap="gotoOrderPage" data-status="0">
                 <view class="my-orders">我的订单</view>
-                <view class="all-order-with-arrow" >
+                <view class="all-order-with-arrow">
                     <view>全部订单</view>
+                    <image class="right_arrow" src="/static/images/right_arrow.png"></image>
+                </view>
+            </view>
+        </view>
+        <view class="wallet-container">
+            <view class="wallet-row" @tap="gotoWalletPage">
+                <view class="my-wallet">我的钱包</view>
+                <view class="wallet-arrow-with-text">
+                    <view>查看钱包</view>
                     <image class="right_arrow" src="/static/images/right_arrow.png"></image>
                 </view>
             </view>
@@ -21,13 +30,13 @@
     </view>
 </template>
 
+
 <script setup>
 import { onMounted, ref } from 'vue';
 import { onShow } from "@dcloudio/uni-app";
 
 const userDesc = ref('');
 
-	
 const checkUserStatus = () => {
     var token = uni.getStorageSync('token');
     if (token) {
@@ -65,11 +74,16 @@ const gotoOrderPage = (status) => {
     });
 };
 
+const gotoWalletPage = () => {
+    uni.navigateTo({
+        url: '/pages/wallet/wallet'
+    });
+};
+
 onMounted(() => {
     checkUserStatus();
 });
 </script>
-
 
 <style>
 .page-wrapper {
@@ -116,7 +130,7 @@ onMounted(() => {
     padding-left: 50rpx;
 }
 
-.order-container {
+.order-container{
     background-color: #fff;
     border-radius: 10rpx;
     margin-top: 40rpx;
@@ -127,15 +141,26 @@ onMounted(() => {
     padding-top: 20rpx;
     padding-bottom: 20rpx;
 }
+.wallet-container {
+	background-color: #fff;
+	border-radius: 10rpx;
+	margin-top: 10rpx;
+	margin-left: 20rpx;
+	margin-right: 20rpx;
+	padding-left: 20rpx;
+	padding-right: 20rpx;
+	padding-top: 20rpx;
+	padding-bottom: 20rpx;
+}
 
-.order-row {
+.order-row, .wallet-row {
     display: flex;
     flex-direction: row;
     width: 100%;
     align-items: center;
 }
 
-.my-orders {
+.my-orders, .my-wallet {
     flex: 1;
 }
 
@@ -144,7 +169,7 @@ onMounted(() => {
     width: 40rpx;
 }
 
-.all-order-with-arrow {
+.all-order-with-arrow, .wallet-arrow-with-text {
     display: flex;
     flex-direction: row;
 }

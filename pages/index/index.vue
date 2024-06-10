@@ -48,7 +48,9 @@ import { getDishImage, queryGoods, queryCategory, queryGoodsByCategory } from '@
 	const getGoodsByCategory = async () => {
 	  try {
 		const response = await queryGoodsByCategory(selectedCategory.value + 1);
-		const dishes = response.data.data.dishes;
+		let dishes = response.data.data.dishes;
+		
+		dishes = dishes.filter(dish => dish.DishId !== 45 && dish.DishId !== 46);
 		
 		// 逐个获取所有菜品的图片数据
 		for (const dish of dishes) {
@@ -86,11 +88,17 @@ import { getDishImage, queryGoods, queryCategory, queryGoodsByCategory } from '@
 	};
 	
 	const gotoGoodsDetail = (e) => {
-		let goodsId = e.currentTarget.dataset['id']
-		uni.navigateTo({
-			url: '/pages/goods/goods?id=' + goodsId
-		})
-	}
+	    let goodsId = e.currentTarget.dataset['id'];
+	    if (goodsId == 1) {
+	        uni.navigateTo({
+	            url: '/pages/good_chip/good_chip?id=' + goodsId
+	        });
+	    } else {
+	        uni.navigateTo({
+	            url: '/pages/goods/goods?id=' + goodsId
+	        });
+	    }
+	};
 	
 	onMounted(() => {
 	  getCategories();

@@ -14,7 +14,7 @@
 			<view class="bottom-split"></view>
 			<view class="bottom-btns">
 				<view class="cart-btn" @tap="addGoodToCart" :data-id="id">加入购物车</view>
-				<view class="buy-btn" @tap="buyNow" :data-id="id">立刻购买</view>
+				<!-- <view class="buy-btn" @tap="buyNow" :data-id="id">立刻购买</view> -->
 			</view>
 		</view>
 	</view>
@@ -59,6 +59,7 @@ import { getGoodInfo, addToCart, getDishImage } from '@/common/api';
 	  const token = uni.getStorageSync('token');
 	  const params = {
 	    dish_id: parseInt(id.value)
+		
 	  };
 	  if (!token) {
 	    uni.navigateTo({
@@ -78,26 +79,7 @@ import { getGoodInfo, addToCart, getDishImage } from '@/common/api';
 	    }
 	  }
 	};
-
 	
-	const buyNow = (e) => {
-	  const token = uni.getStorageSync('token');
-	  let goodsId = e.currentTarget.dataset['id']
-	  if (!token) {
-	    uni.navigateTo({
-	    	url: '/pages/login/login'
-	    });
-	  } else {
-		uni.navigateTo({
-		  	url: '/pages/order/order-confirm/order-confirm?id=' + goodsId
-		})
-	  }
-	};
-	
-	// onMounted(() => {
-	//   queryData();
-	// });
-
 </script>
 
 

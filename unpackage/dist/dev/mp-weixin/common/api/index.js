@@ -10,7 +10,7 @@ function getGoodInfo(id) {
   return common_utils_request.request("", `/api/dish/info?id=${id}`, "get").then((resp) => resp);
 }
 function getDishImage(dishId) {
-  return common_utils_request.request("", `/api/dish/image?id=${dishId}`, "GET").then((resp) => resp);
+  return common_utils_request.request("", `/api/dish/image?id=${dishId}`, "get").then((resp) => resp);
 }
 function addToCart(params) {
   return common_utils_request.request(params, "/api/cart/add", "post").then((resp) => resp);

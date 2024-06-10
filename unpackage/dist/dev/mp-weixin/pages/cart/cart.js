@@ -22,6 +22,17 @@ const _sfc_main = {
         const response = await common_api_index.queryCart(cartId.value);
         if (response.data.code) {
           dataList.value = response.data.data.cartItems;
+          for (const dish of dataList.value) {
+            try {
+              const imageResponse = await common_api_index.getDishImage(dish.DishID);
+              const nameResponse = await common_api_index.getGoodInfo(dish.DishID);
+              dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+              dish.Name = nameResponse.data.data.dishInfo.Name;
+            } catch (imageError) {
+              console.error(`获取图片失败: ${imageError}`);
+              dish.Picture = "";
+            }
+          }
           selectedCartIndexes.value = [];
           selectedSum.value = "￥0";
         }
@@ -32,7 +43,6 @@ const _sfc_main = {
     const increaseQuantity = async (e) => {
       let index = e.currentTarget.dataset["index"];
       let cartItem = dataList.value[index];
-      console.log(cartItem);
       let dishId = cartItem.DishID;
       cartItem.Quantity + 1;
       const params = {
@@ -46,16 +56,12 @@ const _sfc_main = {
       let cartItem = dataList.value[index];
       let dishId = cartItem.DishID;
       let cartId2 = cartItem.CartID;
-      const token = common_vendor.index.getStorageSync("token");
-      console.log(token);
-      console.log(dishId);
-      console.log(cartId2);
+      common_vendor.index.getStorageSync("token");
       const params = {
-        cart_id: 2,
-        dish_id: 1
+        cart_id: parseInt(cartId2),
+        dish_id: parseInt(dishId)
       };
-      const response = await common_api_index.deleteCart(params);
-      console.log(response);
+      await common_api_index.deleteCart(params);
       updateSelectionSum();
     };
     const changeSelection = (e) => {
@@ -95,6 +101,7 @@ const _sfc_main = {
     };
     common_vendor.onMounted(() => {
       var token = common_vendor.index.getStorageSync("token");
+      console.log(token);
       cartId.value = common_vendor.index.getStorageSync("cart_id");
       if (token) {
         isLoggedIn.value = true;
@@ -112,7 +119,7 @@ const _sfc_main = {
             a: common_vendor.o(changeSelection, item.k),
             b: bindex,
             c: item.checked,
-            d: item.squarePic,
+            d: item.Picture,
             e: item.goodsId,
             f: common_vendor.t(item.Name),
             g: item.goodsId,

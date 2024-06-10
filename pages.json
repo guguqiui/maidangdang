@@ -74,6 +74,27 @@
 			{
 				"navigationBarTitleText": "确认订单"
 			}
+		},
+		{
+			"path" : "pages/suggestion/suggestion",
+			"style" : 
+			{
+				"navigationBarTitleText": "意见与建议"
+			}
+		},
+		{
+			"path" : "pages/wallet/wallet",
+			"style" : 
+			{
+				"navigationBarTitleText": "我的钱包"
+			}
+		},
+		{
+			"path" : "pages/good_chip/good_chip",
+			"style" : 
+			{
+				"navigationBarTitleText": "商品详情"
+			}
 		}
 	],
 	"tabBar": {

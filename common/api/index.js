@@ -37,10 +37,39 @@ export function search(keyword) {
 	return request('', `/api/dish/search?keyword=${keyword}`, 'get').then(resp => resp)
 }
 
+export function submitOrder(params) {
+	return request(params, '/api/order/submit', 'post').then(resp => resp)
+}
+
+export function removeOrder(params) {
+	return request(params, '/api/order/delete', 'post').then(resp => resp)
+}
+
+export function refundOrder(params) {
+	return request(params, '/api/order/refund_request', 'post').then(resp => resp)
+}
+
+export function listOrder() {
+	return request('', '/api/order/list', 'post').then(resp => resp)
+}
+
+export function searchOrder(params) {
+	return request(params, '/api/order/items', 'post').then(resp => resp)
+}
+
+export function recharge(params) {
+	return request(params, '/api/user/recharge', 'post').then(resp => resp)
+}
+
 export function login(params) {
 	return request(params, '/api/auth/login', 'post').then(resp => resp)
 }
 
 export function register(params) {
 	return request(params, '/api/auth/register', 'post').then(resp => resp)
+}
+
+export function getUserInfo() {
+	return request('', '/api/user/info', 'post').then(resp => resp)
+
 }

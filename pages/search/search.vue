@@ -21,7 +21,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { search } from '@/common/api';
+import { search, getDishImage } from '@/common/api';
 
 	const goodsList = ref([]);
 	const keyword = ref('');
@@ -35,7 +35,19 @@ import { search } from '@/common/api';
 		try {
 			const response = await search(keyword.value);
 			if (!response.data.code) {
-				goodsList.value = response.data.data.dishes;
+				const dishes = response.data.data.dishes;
+				// 逐个获取所有菜品的图片数据
+				for (const dish of dishes) {
+					try {
+						const imageResponse = await getDishImage(dish.DishId);
+						dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+					} catch (imageError) {
+						console.error(`获取图片失败: ${imageError}`);
+						// 如果获取图片失败，可以选择设置一个默认图片或处理错误
+						dish.Picture = '';
+					}
+				}
+				goodsList.value = dishes;
 			}
 		} catch (error) {
 			console.error('搜索商品失败：', error);

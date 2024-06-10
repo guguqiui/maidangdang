@@ -27,7 +27,7 @@ page {
     margin-left: 20rpx;
 }
 .pic {
-    width: 200rpx;
+    width: 350rpx;
     height: 200rpx;
 }
 .goods-name {
@@ -75,7 +75,8 @@ page {
     padding-right: 20rpx;
 }
 .bottom-wrapper {
-    position: fixed;
+    position: -webkit-sticky;
+    position: sticky;
     bottom: 0;
     width: 100%;
     display: flex;

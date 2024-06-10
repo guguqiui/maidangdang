@@ -5,7 +5,7 @@ function getType(data, method) {
   let type = {};
   const token = common_vendor.index.getStorageSync("token");
   const authHeader = "Bearer " + token;
-  if (method == "post" || method == "put") {
+  if (method == "post" || method == "put" || method == "delete") {
     type = {
       method,
       data: {

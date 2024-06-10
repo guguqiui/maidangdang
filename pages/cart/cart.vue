@@ -1,9 +1,7 @@
 <template>
     <view class="page-wrapper">
         <view class="info-container" v-for="(item, bindex) in dataList" :key="item.k">
-            <switch type="checkbox" @change="changeSelection" :data-index="bindex" :checked="item.checked"></switch>
-
-            <image :src="item.squarePic" class="pic" :data-id="item.goodsId"></image>
+            <image :src="item.Picture" class="pic" :data-id="item.goodsId"></image>
 
             <view class="info-cols">
                 <view class="goods-name" :data-id="item.goodsId">{{ item.Name }}</view>
@@ -24,143 +22,132 @@
             <view class="bottom-split"></view>
             <view class="bottom-row" v-if="isLoggedIn">
                 <view class="selected-row" :data-id="id">
-                    <view>已选 ({{ selectedCartIndexes.length }})</view>
                     <view class="sum-text">总计</view>
                     <view class="price">{{ selectedSum }}</view>
                 </view>
-                <view :class="'buy-btn ' + (selectedCartIndexes.length > 0 ? 'btn-enabled' : 'btn-disabled')" @tap="gotoConfirmOrder">结算</view>
+                <view class="buy-btn" @tap="gotoConfirmOrder">结算</view>
             </view>
-			<view class="bottom-login-row" v-else>
-				 <view class="login-tips">登录后查看已加购商品</view>
-				 <view class="login-btn" @tap="gotoLoginPage">立即登录</view>
-			</view>
+            <view class="bottom-login-row" v-else>
+                <view class="login-tips">登录后查看已加购商品</view>
+                <view class="login-btn" @tap="gotoLoginPage">立即登录</view>
+            </view>
         </view>
     </view>
 </template>
 
+
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { queryCart, addToCart, deleteCart } from '@/common/api'
+import { getDishImage, getGoodInfo, queryCart, addToCart, deleteCart } from '@/common/api'
 
-	const id = ref('');
-	const cartId = ref('');
-	const dataList = ref([]);
-	const selectedCartIndexes = ref([]);
-	const selectedSum = ref('￥0');
-	const isLoggedIn = ref(false);
-	
-	const gotoLoginPage = () => {
-	    uni.navigateTo({
-	        url: '/pages/login/login'
-	    });
-	};
-	
-	const queryData = async() => {
-		try {
-			const response = await queryCart(cartId.value);
-			if (response.data.code) {
-				dataList.value = response.data.data.cartItems;
-				selectedCartIndexes.value = [];
-				selectedSum.value = '￥0';
-			  }
-		} catch (error) {
-		  console.error('获取购物车数据失败：', error);
-		}
-	};
-	
-	const increaseQuantity = async(e) => {
-		let index = e.currentTarget.dataset['index'];
-		let cartItem = dataList.value[index];
-		console.log(cartItem)
-		let dishId = cartItem.DishID;
-	    let quantity = cartItem.Quantity + 1;
-		const params = {
-		  dish_id: parseInt(dishId)
-		};
-		await addToCart(params);
-		updateSelectionSum();
-	}
-	
-	
-	const decreaseQuantity = async(e) => {
-		let index = e.currentTarget.dataset['index'];
-		let cartItem = dataList.value[index];
-		
-		let dishId = cartItem.DishID;
-		let cartId = cartItem.CartID;
-		const token = uni.getStorageSync('token');
-		
-		console.log(token)
-		console.log(dishId)
-		console.log(cartId)
-		
-		const params = {
-			cart_id: parseInt(cartId),
-			dish_id: parseInt(dishId)
-		};
-		
-		const response = await deleteCart(params);
-		console.log(response)
-		updateSelectionSum();
-	}
-	
-	const changeSelection = (e) => {
-	    let index = e.currentTarget.dataset['index'];
-	    let isChecked = e.detail.value;
-	
-	    if (isChecked === true && !selectedCartIndexes.value.includes(index)) {
-	        selectedCartIndexes.value.push(index);
-	    } else {
-	        let pos = selectedCartIndexes.value.indexOf(index);
-	
-	        if (pos > -1) {
-	            selectedCartIndexes.value.splice(pos, 1);
-	        }
-	    }
-	    updateSelectionSum();
-	};
-	
-	const updateSelectionSum = () => {
-	    var sum = 0;
-	    if (selectedCartIndexes.value != null && typeof selectedCartIndexes.value != 'undefined') {
-	        selectedCartIndexes.value.forEach((elem, index) => {
-	            sum += (dataList.value[elem].Quantity * dataList.value[elem].Price);
-	        });
-	    }
-	
-	    selectedSum.value = '￥' + sum
-	};
-	
-	const gotoConfirmOrder = (e) => {
-	    var cartIds = '';
-	
-	    if (selectedCartIndexes.value != null && typeof selectedCartIndexes.value != 'undefined') {
-	        selectedCartIndexes.value.forEach((elem, index) => {
-	            cartIds += dataList.value[elem].id + ',';
-	        });
-	    }
-	
-	    if (cartIds != '') {
-	        uni.navigateTo({
-	            url: '/pages/order/order-confirm-from-cart/order-confirm-from-cart?ids=' + cartIds
-	        });
-	    }
-	};
-	
-	onMounted(() => {
-	    var token = uni.getStorageSync('token');
-		cartId.value = uni.getStorageSync('cart_id');
-		
-	    if (token) {
-	        isLoggedIn.value = true;
-            queryData();
-	    } else {
-	        isLoggedIn.value = false;
-	        dataList.value = [];
-	        selectedCartIndexes.value = [];
-	    }
-	});
+const id = ref('');
+const cartId = ref('');
+const dataList = ref([]);
+const selectedSum = ref('￥0');
+const isLoggedIn = ref(false);
+
+const gotoLoginPage = () => {
+    uni.navigateTo({
+        url: '/pages/login/login'
+    });
+};
+
+const queryData = async () => {
+    try {
+        const response = await queryCart(cartId.value);
+        if (response.data.code) {
+            dataList.value = response.data.data.cartItems;
+
+            // 逐个获取所有菜品的图片数据，并默认选中所有商品
+            let sum = 0;
+            for (const dish of dataList.value) {
+                try {
+                    const imageResponse = await getDishImage(dish.DishID);
+                    const nameResponse = await getGoodInfo(dish.DishID);
+                    dish.Picture = `data:image/jpeg;base64,${imageResponse.data.data.image}`;
+                    dish.Name = nameResponse.data.data.dishInfo.Name;
+                    sum += dish.Quantity * dish.Price;
+                } catch (imageError) {
+                    console.error(`获取图片失败: ${imageError}`);
+                    dish.Picture = '';
+                }
+            }
+            selectedSum.value = '￥' + sum;
+        }
+    } catch (error) {
+        console.error('获取购物车数据失败：', error);
+    }
+};
+
+const increaseQuantity = async (e) => {
+    let index = e.currentTarget.dataset['index'];
+    let cartItem = dataList.value[index];
+    let dishId = cartItem.DishID;
+    let quantity = cartItem.Quantity + 1;
+    const params = {
+        dish_id: parseInt(dishId)
+    };
+    await addToCart(params);
+    cartItem.Quantity = quantity;
+    updateSelectionSum();
+}
+
+const decreaseQuantity = async (e) => {
+    let index = e.currentTarget.dataset['index'];
+    let cartItem = dataList.value[index];
+    let dishId = cartItem.DishID;
+    let cartId = cartItem.CartID;
+    const token = uni.getStorageSync('token');
+    const params = {
+        cart_id: parseInt(cartId),
+        dish_id: parseInt(dishId)
+    };
+    const response = await deleteCart(params);
+    if (cartItem.Quantity > 0) {
+        cartItem.Quantity -= 1;
+        if (cartItem.Quantity === 0) {
+            dataList.value.splice(index, 1); // 数量为0时从列表中删除
+        }
+        updateSelectionSum();
+    }
+}
+
+const updateSelectionSum = () => {
+    var sum = 0;
+    dataList.value.forEach((item) => {
+        sum += item.Quantity * item.Price;
+    });
+    selectedSum.value = '￥' + sum;
+};
+
+const gotoConfirmOrder = (e) => {
+    if (selectedSum.value === '￥0') {
+        uni.showToast({
+            title: '您未选择任何商品',
+            icon: 'none'
+        });
+        return;
+    }
+    uni.navigateTo({
+        url: `/pages/order/order-confirm/order-confirm?cart_id=${cartId.value}&selectedSum=${selectedSum.value}`
+    });
+};
+
+onMounted(() => {
+    var token = uni.getStorageSync('token');
+    console.log(token)
+    cartId.value = uni.getStorageSync('cart_id');
+    if (token) {
+        isLoggedIn.value = true;
+        queryData();
+    } else {
+        isLoggedIn.value = false;
+        dataList.value = [];
+    }
+});
 </script>
+
+
 
 <style>
 page {
@@ -195,7 +182,7 @@ page {
 }
 
 .pic {
-    width: 200rpx;
+    width: 350rpx;
     height: 200rpx;
 }
 
@@ -300,6 +287,7 @@ page {
     display: flex;
     justify-content: center;
     margin-right: 50rpx;
+	background-color: #ED9220; /* 确保背景颜色为橙色 */
 }
 .bottom-login-row {
     width: 100%;
