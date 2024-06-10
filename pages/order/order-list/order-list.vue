@@ -11,10 +11,12 @@
             <view class="order-actions">
                 <button class="order-button" @tap.stop="deleteOrder(order.OrderID)">删除订单</button>
                 <button class="order-button" @tap.stop="requestRefund(order.OrderID)">申请退款</button>
+                <button class="order-button" @tap.stop="gotoComment(order.OrderID)">评价服务</button>
             </view>
         </view>
     </view>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -92,10 +94,17 @@ const requestRefund = async (orderId) => {
     }
 };
 
+const gotoComment = (orderId) => {
+    uni.navigateTo({
+        url: `/pages/comment/comment?order_id=${orderId}`
+    });
+};
+
 onMounted(() => {
     showOrder();
 });
 </script>
+
 
 
 <style>

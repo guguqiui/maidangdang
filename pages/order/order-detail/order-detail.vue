@@ -19,7 +19,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
-import { searchOrder, getGoodInfo, getDishImage} from '@/common/api';
+import { searchOrder, getGoodInfo, getDishImage } from '@/common/api';
 
 const id = ref('');
 const orderItems = ref([]); // 用于存储订单项的响应式变量

@@ -61,6 +61,10 @@ export function recharge(params) {
 	return request(params, '/api/user/recharge', 'post').then(resp => resp)
 }
 
+export function commentOrder(params) {
+	return request(params, '/api/order/comment', 'post').then(resp => resp)
+}
+
 export function login(params) {
 	return request(params, '/api/auth/login', 'post').then(resp => resp)
 }

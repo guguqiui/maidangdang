@@ -95,6 +95,13 @@
 			{
 				"navigationBarTitleText": "商品详情"
 			}
+		},
+		{
+			"path" : "pages/comment/comment",
+			"style" : 
+			{
+				"navigationBarTitleText": "评价服务"
+			}
 		}
 	],
 	"tabBar": {
